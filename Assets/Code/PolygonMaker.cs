@@ -7,7 +7,9 @@ public class PolygonMaker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MakePolygon(new Vector3(0, 0, 0), new Vector3(1, 0, 0), new Vector3(1, 0, 1));
+        //MakePolygon(new Vector3(0, 0, 0), new Vector3(1, 0, 0), new Vector3(1, 0, 1));
+        MakeQuad(new Vector3(0, 0, 0), new Vector3(0, 0, 1), new Vector3(1, 0, 0), new Vector3(1, 0, 1));
+
     }
 
     // Update is called once per frame
@@ -38,5 +40,27 @@ public class PolygonMaker : MonoBehaviour
         mr.material = mt;//메터리얼 값도 MeshRenderer를 통해 보여준다
 
         return go;//마지막으로 생성된 오브젝트를 리턴
+    }
+    public GameObject MakeQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
+    {
+        GameObject go = new GameObject("Quad");
+        Mesh mesh = new Mesh();
+        MeshFilter mf = go.AddComponent<MeshFilter>();
+        MeshRenderer mr = go.AddComponent<MeshRenderer>();
+        Material mt = new Material(Shader.Find("Standard"));
+        mt.mainTexture = (Texture)Resources.Load("Texture/corodinateChecker");
+
+        Vector3[] vertices = { p1, p2, p3, p4 };
+        Vector2[] uvs = { new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1), new Vector2(1, 1) };
+
+        int[] tris = { 0, 1, 2, 2, 1, 3 };//사각형을 만들기 위해 두개의 삼각형을 이용한다.
+       // int[] tris = { 0, 1, 2, 2, 3, 1 }; 이런식으로 두개의 삼각형을 서로 다르게 뒤집어 그릴수도 있다.
+        mesh.vertices = vertices;
+        mesh.triangles = tris;
+        mesh.uv = uvs;
+        mf.mesh = mesh;
+        mr.material = mt;
+
+        return go;
     }
 }
