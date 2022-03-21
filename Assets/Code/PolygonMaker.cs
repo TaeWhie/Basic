@@ -8,7 +8,8 @@ public class PolygonMaker : MonoBehaviour
     void Start()
     {
         //MakePolygon(new Vector3(0, 0, 0), new Vector3(1, 0, 0), new Vector3(1, 0, 1));
-        MakeQuad(new Vector3(0, 0, 0), new Vector3(0, 0, 1), new Vector3(1, 0, 0), new Vector3(1, 0, 1));
+       // MakeQuad(new Vector3(0, 0, 0), new Vector3(0, 0, 1), new Vector3(1, 0, 0), new Vector3(1, 0, 1));
+        MakeSubmeshQuad(new Vector3(0, 0, 0), new Vector3(1, 0, 0), new Vector3(0, 0, 1), new Vector3(0, 0, 1), new Vector3(1, 0, 0), new Vector3(1, 0, 1));
 
     }
 
@@ -17,7 +18,7 @@ public class PolygonMaker : MonoBehaviour
     {
 
     }
-    public GameObject MakePolygon(Vector3 p1, Vector3 p2, Vector3 p3)//생성할 폴리곤의 각각의 점에 대한 벡터
+    public GameObject MakePolygon(Vector3 p1, Vector3 p2, Vector3 p3)//폴리곤을 그리는 함수
     {
         GameObject go = new GameObject("Poligon");//Poligon이라는 이름을 지정하여 GameObjcet를 생성
         Mesh mesh = new Mesh();//Poligon을 그리기 위한 Mesh 생성
@@ -32,7 +33,7 @@ public class PolygonMaker : MonoBehaviour
                                  //int[] tris={0,1,2}; //이 경우 역방향으로 생성-면이 아래를 봄
 
         //이것이 중요한 이유는 면이 바라보는 뱡향이 위인지 아래인지 결정하기 때문이다.
-        mt.mainTexture = (Texture)Resources.Load("Texture/1941165_0");//메터리얼에 texture 할당
+        mt.mainTexture = (Texture)Resources.Load("Texture/1941165_0");//메터리얼에 texture 할당(Texture소스가 없음으로 null)
         mesh.vertices = vertices;//아까 받은 정점들을 그리기 위해 Mesh에 할당
         mesh.triangles = tris;//면의 방향을 결정해주는 요소를 Mesh에 할당
         mesh.uv = uvs;//UV 값을 Mesh에 할당
@@ -41,7 +42,7 @@ public class PolygonMaker : MonoBehaviour
 
         return go;//마지막으로 생성된 오브젝트를 리턴
     }
-    public GameObject MakeQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
+    public GameObject MakeQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)//쿼드를 그리는 함수
     {
         GameObject go = new GameObject("Quad");
         Mesh mesh = new Mesh();
@@ -61,6 +62,35 @@ public class PolygonMaker : MonoBehaviour
         mf.mesh = mesh;
         mr.material = mt;
 
+        return go;
+    }
+    public GameObject MakeSubmeshQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, Vector3 p5, Vector3 p6)//서브메쉬 커드를 그리는 함수
+    {
+        GameObject go = new GameObject("subQuad");
+        Mesh mesh = new Mesh();
+        MeshFilter mf = go.AddComponent<MeshFilter>();
+        MeshRenderer mr = go.AddComponent<MeshRenderer>();
+        Material[] mts = new Material[2];
+
+        mts[0] = new Material(Shader.Find("Standard"));
+        mts[1] = new Material(Shader.Find("Standard"));
+        mts[0].mainTexture = (Texture)Resources.Load("Texture/corodinateChecker");
+        mts[1].mainTexture = (Texture)Resources.Load("Texture/corodinate");
+        mts[1].color = Color.green;// 두 폴리곤의 다른 점을 봐야함으로 색을 넣는다.
+
+        Vector3[] vertices = { p1, p2, p3, p4, p5, p6 };
+        Vector2[] uvs = { new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1), new Vector2(0, 1), new Vector2(1, 0), new Vector2(1, 1) };
+
+        int[] subTris1 = { 0, 2, 1 };//2개의 폴리곤을 그릴 것이기 때문에 따로 설정해준다.
+        int[] subTris2 = { 4, 3, 5 };
+        mesh.vertices = vertices;
+        mesh.subMeshCount = 2;//2개의 폴리곤을 그릴 것이기 때문에 2로 설정
+        mesh.SetTriangles(subTris1, 0);
+        mesh.SetTriangles(subTris2, 1);
+        mesh.uv = uvs;
+
+        mf.mesh = mesh;
+        mr.materials = mts;
         return go;
     }
 }
