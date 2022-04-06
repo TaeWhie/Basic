@@ -64,7 +64,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Code\PolygonMaker.cs" />
+    <Compile Include="Assets\PerlinNoise\PerlinColor.cs" />
+    <Compile Include="Assets\PerlinNoise\PerlinNoise.cs" />
+    <Compile Include="Assets\PerlinNoise\TerrainGenerator.cs" />
+    <Compile Include="Assets\PerlinNoise\Wave.cs" />
+    <Compile Include="Assets\Polygon\PolygonMaker.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/User/Desktop/Smallprj/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
